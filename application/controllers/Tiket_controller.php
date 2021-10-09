@@ -376,7 +376,32 @@ class Tiket_controller extends CI_Controller
 		$this->tiket_model->hapus_tiket_temp($kode_tiket);
 		redirect('tiket_controller/form_tiket');
 	}
+	function do_upload()
+	{
+		// var_dump($_FILES);
+		$config['upload_path'] =
+			"./folsderbukti/files";
+		$nomorTiket = $this->input->post('nomortiket');
+		$config['file_name'] = $nomorTiket;
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['encrypt_name'] = false;
 
+		$this->load->library('upload', $config);
+		$result['statete']='upload pemyaran tiket';
+		if ($this->upload->do_upload("filebox")) {
+			$data = array('upload_data' => $this->upload->data());
+			$result['code'] = 00;
+			$result['messages']=
+			"Succces Upload";
+			$result['data'] = $data['upload_data']['file_name']; 
+		}else{
+			$result['code'] = 01;
+			$result['messages'] = "Filed to Upload, please check your files be detail";
+		}
+		// echo json_decode();
+		echo json_encode($result);
+
+	}
 
 	function update_tiket()
 	{
